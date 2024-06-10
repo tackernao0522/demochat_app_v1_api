@@ -1,0 +1,16 @@
+require:
+  - rubocop-rails
+
+AllCops:
+  NewCops: enable
+  TargetRubyVersion: 3.3
+  Exclude:
+    - "db/schema.rb"
+    - "bin/*"
+    - "node_modules/**/*"
+    - "vendor/**/*"
+  SuggestExtensions: false
+
+# Disable Documentation rule for classes
+Style/Documentation:
+  Enabled: false
