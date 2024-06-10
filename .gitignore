@@ -30,3 +30,4 @@
 
 .ash_history
 .cache/*
+.irb_history
