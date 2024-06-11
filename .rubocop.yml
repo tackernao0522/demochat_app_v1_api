@@ -6,6 +6,7 @@ AllCops:
   TargetRubyVersion: 3.3
   Exclude:
     - "db/schema.rb"
+    - "db/migrate/*"
     - "bin/*"
     - "node_modules/**/*"
     - "vendor/**/*"
@@ -14,3 +15,13 @@ AllCops:
 # Disable Documentation rule for classes
 Style/Documentation:
   Enabled: false
+
+# Additional settings to ignore specific warnings
+Layout/LineLength:
+  Max: 120
+  Exclude:
+    - "config/initializers/devise.rb"
+
+Metrics/MethodLength:
+  Exclude:
+    - "db/migrate/*"
