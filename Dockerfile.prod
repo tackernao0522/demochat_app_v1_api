@@ -11,9 +11,7 @@ ENV HOME=/${WORKDIR} \
 
 WORKDIR ${HOME}
 
-# アプリケーション全体をコピー
-# COPY . ./
-
+# 共通のパッケージインストールとGemfileのコピー
 COPY api/Gemfile* ./
 
 RUN if [ -f Gemfile ]; then \
@@ -26,6 +24,8 @@ RUN if [ -f Gemfile ]; then \
     apk del build-dependencies; \
     fi
 
+# アプリケーションのコードをコピー
 COPY api/ ./
 
-# CMD ["rails", "server", "-b", "0.0.0.0"]
+# 起動前にPIDファイルを削除
+CMD ["sh", "-c", "rm -f tmp/pids/server.pid && bundle exec rails server -b 0.0.0.0"]
