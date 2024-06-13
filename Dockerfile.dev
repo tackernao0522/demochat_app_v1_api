@@ -1,15 +1,15 @@
 FROM ruby:3.3.2-alpine
 
-ARG WORKDIR
+ARG WORKDIR=/app  # デフォルト値を/appに設定
 
 ARG RUNTIME_PACKAGES="nodejs tzdata postgresql-dev postgresql git libxml2-dev libxslt-dev libc6-compat"
 ARG DEV_PACKAGES="build-base curl-dev"
 
-ENV HOME=/${WORKDIR} \
+ENV HOME=${WORKDIR} \
     LANG=C.UTF-8 \
     TZ=Asia/Tokyo
 
-WORKDIR ${HOME}
+WORKDIR ${WORKDIR}
 
 COPY Gemfile* ./
 
