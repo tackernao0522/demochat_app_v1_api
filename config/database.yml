@@ -9,7 +9,7 @@ default: &default
 
 development:
   <<: *default
-  database: db
+  database: app_development
 
 test:
   <<: *default
