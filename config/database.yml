@@ -5,6 +5,7 @@ default: &default
   username: postgres
   password: <%= ENV['POSTGRES_PASSWORD'] %>
   host: db
+  port: 5432
 
 development:
   <<: *default
