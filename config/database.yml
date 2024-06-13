@@ -4,7 +4,7 @@ default: &default
   pool: <%= ENV.fetch("RAILS_MAX_THREADS") { 5 } %>
   username: postgres
   password: <%= ENV['POSTGRES_PASSWORD'] %>
-  host: db
+  host: localhost
   port: 5432
 
 development:
@@ -13,10 +13,8 @@ development:
 
 test:
   <<: *default
-  database: demochat_api_test
+  database: app_test
 
 production:
   <<: *default
-  database: demochat_api_production
-  username: demochat
-  password: <%= ENV['DEMOMAP_DATABASE_PASSWORD'] %>
+  database: app_production
