@@ -9,7 +9,7 @@ default: &default
 
 development:
   <<: *default
-  database: demochat_api_development
+  database: db
 
 test:
   <<: *default
