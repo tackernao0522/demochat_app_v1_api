@@ -7,7 +7,7 @@ default: &default
 
 development:
   <<: *default
-  host: db
+  host: localhost
   database: demochat_api_development
 
 test:
