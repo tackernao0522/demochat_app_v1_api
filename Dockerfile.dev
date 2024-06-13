@@ -13,14 +13,12 @@ WORKDIR ${WORKDIR}
 
 COPY Gemfile* ./
 
-RUN if [ -f Gemfile ]; then \
-    apk update && \
+RUN apk update && \
     apk upgrade && \
     apk add --no-cache ${RUNTIME_PACKAGES} && \
     apk add --virtual build-dependencies --no-cache ${DEV_PACKAGES} && \
     bundle config build.nokogiri --use-system-libraries && \
     bundle install -j4 && \
-    apk del build-dependencies; \
-    fi
+    apk del build-dependencies
 
 COPY . ./
