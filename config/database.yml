@@ -17,6 +17,5 @@ test:
 
 production:
   <<: *default
+  host: demochat-db.internal
   database: demochat_api_production
-  username: demochat
-  password: <%= ENV['DEMOMAP_DATABASE_PASSWORD'] %>
