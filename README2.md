@@ -113,3 +113,40 @@ docker compose -f docker-compose.dev.yml --env-file .env.development run --rm ap
 DELETE FROM users;
 
 ALTER SEQUENCE users_id_seq RESTART WITH 1;
+
+postgres=# \l
+List of databases
+Name | Owner | Encoding | Locale Provider | Collate | Ctype | ICU Locale | ICU Rules | Access privileges  
+----------------+----------+----------+-----------------+------------+------------+------------+-----------+-----------------------
+app_production | postgres | UTF8 | libc | en_US.utf8 | en_US.utf8 | | |
+postgres | postgres | UTF8 | libc | en_US.utf8 | en_US.utf8 | | |
+repmgr | repmgr | UTF8 | libc | en_US.utf8 | en_US.utf8 | | |
+template0 | postgres | UTF8 | libc | en_US.utf8 | en_US.utf8 | | | =c/postgres +
+| | | | | | | | postgres=CTc/postgres
+template1 | postgres | UTF8 | libc | en_US.utf8 | en_US.utf8 | | | =c/postgres +
+| | | | | | | | postgres=CTc/postgres
+(5 rows)
+
+postgres=# \c app_production
+psql (16.3, server 15.6 (Debian 15.6-1.pgdg120+2))
+You are now connected to database "app_production" as user "postgres".
+app_production=# \dt
+List of relations
+Schema | Name | Type | Owner  
+--------+----------------------+-------+----------
+public | ar_internal_metadata | table | postgres
+public | schema_migrations | table | postgres
+public | users | table | postgres
+(3 rows)
+
+app_production=#
+
+```
+flyctl secrets set \
+POSTGRES_USER=postgres \
+POSTGRES_PASSWORD=Byvuntsm2myNzTt \
+POSTGRES_DB=app_production \
+DATABASE_URL=postgres://postgres:Byvuntsm2myNzTt@demochat-db.flycast:5432/app_production \
+API_DOMAIN=https://demochat-api.fly.dev \
+BASE_URL=https://demochat-api.fly.dev
+```
