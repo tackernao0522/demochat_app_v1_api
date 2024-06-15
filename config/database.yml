@@ -1,55 +1,21 @@
-version: 2.1
+default: &default
+  adapter: postgresql
+  encoding: unicode
+  pool: <%= ENV.fetch("RAILS_MAX_THREADS") { 5 } %>
+  username: postgres
+  password: <%= ENV['POSTGRES_PASSWORD'] %>
+  port: 5432
 
-executors:
-  docker-executor:
-    docker:
-      - image: cimg/ruby:3.3.2
-      - image: cimg/postgres:15.7
-    working_directory: ~/project
+development:
+  <<: *default
+  database: app_development
+  host: db
 
-jobs:
-  build:
-    executor: docker-executor
-    steps:
-      - checkout
-      - run:
-          name: Initialize and update submodules
-          command: |
-            git submodule sync --recursive
-            git submodule update --init --recursive
-      - setup_remote_docker
-      - run:
-          name: Clean up environment
-          command: |
-            echo "Cleaning up unused Docker networks..."
-            docker network prune -f
-      - run:
-          name: Stop and remove containers
-          command: |
-            echo "Stopping and removing Docker containers..."
-            docker-compose -f docker-compose.dev.yml down -v
-      - run:
-          name: Start services
-          command: |
-            echo "Starting Docker services..."
-            docker-compose -f docker-compose.dev.yml up -d
-            docker-compose -f docker-compose.dev.yml ps
-      - run:
-          name: Set database host for Rails API (CircleCI)
-          command: |
-            sed -i 's/host: db/host: localhost/' ~/project/api/config/database.yml
-      - run:
-          name: Install dependencies and set up database
-          command: |
-            cd ~/project/api
-            gem install bundler
-            bundle install
-            bundle exec rails db:drop || true
-            bundle exec rails db:create
-            bundle exec rails db:migrate
+test:
+  <<: *default
+  database: demochat_api_test
 
-workflows:
-  version: 2
-  build_and_test:
-    jobs:
-      - build
+production:
+  <<: *default
+  host: demochat-db.internal
+  database: demochat_api_production
