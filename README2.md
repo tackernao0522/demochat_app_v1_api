@@ -150,3 +150,7 @@ DATABASE_URL=postgres://postgres:Byvuntsm2myNzTt@demochat-db.flycast:5432/app_pr
 API_DOMAIN=https://demochat-api.fly.dev \
 BASE_URL=https://demochat-api.fly.dev
 ```
+
+docker network prune
+docker compose -f docker-compose.dev.yml up
+docker compose -f docker-compose.dev.yml down
