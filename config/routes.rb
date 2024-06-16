@@ -8,6 +8,8 @@ Rails.application.routes.draw do
     registrations: 'auth/registrations'
   }
 
+  resources :messages, only: ['index']
+
   # 他のAPIエンドポイントのルート設定
   get '/your_api_endpoint', to: 'api#your_action'
 end
