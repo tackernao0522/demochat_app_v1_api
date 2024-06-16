@@ -17,4 +17,4 @@ test:
 production:
   <<: *default
   host: demochat-db.internal
-  database: demochat_api_production
+  database: app_production
