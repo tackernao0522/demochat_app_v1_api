@@ -13,5 +13,13 @@ require 'rails_helper'
 #   end
 # end
 RSpec.describe MessagesHelper, type: :helper do
-  pending "add some examples to (or delete) #{__FILE__}"
+  describe '#format_message' do
+    let(:user) { build(:user, name: 'テストユーザー') }
+    let(:message) { build(:message, content: 'これはテストメッセージです。', user:) }
+
+    it 'メッセージをフォーマットすること' do
+      result = helper.format_message(message)
+      expect(result).to eq('テストユーザー: これはテストメッセージです。')
+    end
+  end
 end
