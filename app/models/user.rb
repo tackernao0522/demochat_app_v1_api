@@ -9,6 +9,8 @@ class User < ApplicationRecord
 
   has_many :messages, dependent: :destroy
 
+  has_many :likes, dependent: :destroy
+
   validates :name, presence: true
   validates :name, length: { maximum: 30 }
 end
