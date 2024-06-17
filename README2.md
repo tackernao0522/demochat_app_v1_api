@@ -154,3 +154,10 @@ BASE_URL=https://demochat-api.fly.dev
 docker network prune
 docker compose -f docker-compose.dev.yml up
 docker compose -f docker-compose.dev.yml down
+
+SELECT pid, pg_terminate_backend(pid) FROM pg_stat_activity WHERE datname = 'app_production';
+
+DROP DATABASE app_production;
+
+rails db:create
+rails db:migrate
