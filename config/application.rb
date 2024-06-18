@@ -17,5 +17,8 @@ module App
     # CSRFトークンの設定
     config.middleware.use ActionDispatch::Flash
     config.api_only = false
+
+    # デフォルトのロケールを日本語に設定
+    config.i18n.default_locale = :ja
   end
 end

@@ -17,7 +17,7 @@ RSpec.describe 'Auth::Registrations', type: :request do
            params: { name: 'テストユーザー', email: 'test@example.com', password: 'password',
                      password_confirmation: 'different_password' }
       expect(response).to have_http_status(:unprocessable_entity)
-      expect(json['errors']['full_messages']).to include("Password confirmation doesn't match Password")
+      expect(json['errors']['full_messages']).to include('Password confirmation が一致しません')
     end
 
     it 'メールアドレスが既に存在する場合は登録に失敗すること' do
@@ -26,7 +26,7 @@ RSpec.describe 'Auth::Registrations', type: :request do
            params: { name: 'テストユーザー', email: 'test@example.com', password: 'password',
                      password_confirmation: 'password' }
       expect(response).to have_http_status(:unprocessable_entity)
-      expect(json['errors']['full_messages']).to include('Email has already been taken')
+      expect(json['errors']['full_messages']).to include('Email はすでに存在します')
     end
   end
 end

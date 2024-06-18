@@ -14,6 +14,8 @@ Rails.application.routes.draw do
     end
   end
 
+  resources :likes, only: ['destroy']
+
   # 他のAPIエンドポイントのルート設定
   get '/your_api_endpoint', to: 'api#your_action'
 end
