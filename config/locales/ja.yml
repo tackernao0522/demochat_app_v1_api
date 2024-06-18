@@ -1,0 +1,8 @@
+ja:
+  activerecord:
+    errors:
+      models:
+        like:
+          attributes:
+            user_id:
+              taken: "は同じメッセージに複数回いいねをすることはできません"
