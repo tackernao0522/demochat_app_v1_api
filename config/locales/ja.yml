@@ -2,7 +2,17 @@ ja:
   activerecord:
     errors:
       models:
-        like:
+        user:
           attributes:
-            user_id:
-              taken: "は同じメッセージに複数回いいねをすることはできません"
+            email:
+              taken: "はすでに存在します"
+            password_confirmation:
+              confirmation: "が一致しません"
+          confirmation: "確認"
+          taken: "はすでに存在します"
+      messages:
+        taken: "はすでに存在します"
+  errors:
+    messages:
+      confirmation: "が一致しません"
+      taken: "はすでに存在します"
