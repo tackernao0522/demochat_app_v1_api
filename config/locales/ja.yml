@@ -5,11 +5,15 @@ ja:
         user:
           attributes:
             email:
-              taken: "はすでに存在します"
+              Taken: "はすでに存在します"
             password_confirmation:
               confirmation: "が一致しません"
           confirmation: "確認"
           taken: "はすでに存在します"
+        like:
+          attributes:
+            user_id:
+              taken: "ユーザーは既にこのメッセージにいいねしています"
       messages:
         taken: "はすでに存在します"
   errors:

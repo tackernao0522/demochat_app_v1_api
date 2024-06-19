@@ -6,5 +6,5 @@ class Like < ApplicationRecord
 
   validates :user_id,
             uniqueness: { scope: :message_id,
-                          message: I18n.t('activerecord.errors.models.like.attribures.user_id.taken') }
+                          message: I18n.t('activerecord.errors.models.like.attributes.user_id.taken') }
 end

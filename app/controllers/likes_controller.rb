@@ -2,26 +2,32 @@
 
 class LikesController < ApplicationController
   before_action :authenticate_user!, only: %w[create destroy]
+  before_action :set_like, only: :destroy
 
   def create
     like = Like.new(message_id: params[:id], user_id: current_user.id)
-
-    if like.save
-      render json: { id: like.id, email: current_user.email, message: '成功しました' }, status: :ok
-    else
-      render json: { message: '保存出来ませんでした', errors: like.errors.messages }, status: :bad_request
-    end
+    render_response(like.save, like, 'いいねが成功しました', 'いいねの保存が出来ませんでした')
   end
 
   def destroy
-    like = Like.find_by(id: params[:id], user_id: current_user.id)
-
-    if like.nil?
-      render json: { message: '見つかりませんでした' }, status: :not_found
-    elsif like.destroy
-      render json: { id: like.id, email: like.user.email, message: '削除に成功しました' }, status: :ok
+    if @like.nil?
+      render json: { message: 'いいねが見つかりませんでした' }, status: :not_found
     else
-      render json: { message: '削除できませんでした', errors: like.errors.messages }, status: :bad_request
+      render_response(@like.destroy, @like, 'いいねの削除に成功しました', 'いいねの削除が出来ませんでした')
+    end
+  end
+
+  private
+
+  def set_like
+    @like = Like.find_by(id: params[:id], user_id: current_user.id)
+  end
+
+  def render_response(success, like, success_message, failure_message)
+    if success
+      render json: { id: like.id, email: current_user.email, message: success_message }, status: :ok
+    else
+      render json: { message: failure_message, errors: like.errors.messages }, status: :bad_request
     end
   end
 end
