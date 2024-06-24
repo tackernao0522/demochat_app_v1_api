@@ -161,3 +161,10 @@ DROP DATABASE app_production;
 
 rails db:create
 rails db:migrate
+
+RSpec が突然通らなくなった時の対処法
+docker compose -f docker-compose.dev.yml --env-file .env.development run --rm api rails db:drop RAILS_ENV=test
+docker compose -f docker-compose.dev.yml --env-file .env.development run --rm api rails db:create RAILS_ENV=test
+docker compose -f docker-compose.dev.yml --env-file .env.development run --rm api rails db:migrate RAILS_ENV=test
+
+docker compose -f docker-compose.dev.yml --env-file .env.development run --rm api rails db:migrate:status RAILS_ENV=test

@@ -31,3 +31,4 @@
 .ash_history
 .cache/*
 .irb_history
+.psql_history
