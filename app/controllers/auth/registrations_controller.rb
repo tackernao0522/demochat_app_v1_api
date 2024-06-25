@@ -5,11 +5,7 @@ module Auth
     private
 
     def sign_up_params
-      if params[:registration]
-        params.require(:registration).permit(:name, :email, :password, :password_confirmation)
-      else
-        params.permit(:name, :email, :password, :password_confirmation)
-      end
+      params.permit(:name, :email, :password, :password_confirmation)
     end
   end
 end
