@@ -2,31 +2,52 @@
 
 class RoomChannel < ApplicationCable::Channel
   def subscribed
-    stream_from 'room_channel'
-    Rails.logger.info 'User subscribed to RoomChannel'
+    user = find_verified_user
+    if user
+      stream_from "room_channel_#{user.id}"
+      Rails.logger.info "User #{user.email} subscribed to RoomChannel"
+    else
+      reject
+      Rails.logger.error 'Subscription rejected: Unauthorized user'
+    end
   end
 
   def unsubscribed
-    # Any cleanup needed when channel is unsubscribed
-    Rails.logger.info 'User unsubscribed from RoomChannel'
+    user = find_verified_user
+    if user
+      Rails.logger.info "User #{user.email} unsubscribed from RoomChannel"
+    else
+      Rails.logger.error 'Unsubscription error: Unauthorized user'
+    end
   end
 
   def receive(data)
     Rails.logger.info "Received data: #{data.inspect}"
-    user = find_user(data['email'])
+    user = find_verified_user
 
     if user
-      create_and_broadcast_message(data, user)
+      process_received_data(data, user)
     else
-      Rails.logger.error "User not found: #{data['email']}"
+      Rails.logger.error 'Receive error: Unauthorized user'
     end
   end
 
   private
 
-  def find_user(email)
-    User.find_by(email:).tap do |user|
-      Rails.logger.error "User not found: #{email}" unless user
+  def find_verified_user
+    if (verified_user = User.find_by(id: current_user&.id))
+      verified_user
+    else
+      Rails.logger.error 'User not found or unauthorized'
+      nil
+    end
+  end
+
+  def process_received_data(data, user)
+    if data['message'].present?
+      create_and_broadcast_message(data, user)
+    else
+      Rails.logger.error "Received empty message from user: #{user.email}"
     end
   end
 
@@ -41,7 +62,7 @@ class RoomChannel < ApplicationCable::Channel
   end
 
   def broadcast_message(data, user, message)
-    ActionCable.server.broadcast 'room_channel', {
+    ActionCable.server.broadcast "room_channel_#{user.id}", {
       message: data['message'],
       name: user.name,
       created_at: message.created_at,
