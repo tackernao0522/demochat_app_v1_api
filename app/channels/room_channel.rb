@@ -1,55 +1,25 @@
-# frozen_string_literal: true
-
+# app/channels/room_channel.rb
 class RoomChannel < ApplicationCable::Channel
   def subscribed
-    user = find_verified_user
-    if user
-      stream_from "room_channel_#{user.id}"
-      Rails.logger.info "User #{user.email} subscribed to RoomChannel"
-    else
-      reject
-      Rails.logger.error 'Subscription rejected: Unauthorized user'
-    end
+    stream_from "room_channel_#{current_user.id}"
+    Rails.logger.info "User #{current_user.email} subscribed to RoomChannel"
   end
 
   def unsubscribed
-    user = find_verified_user
-    if user
-      Rails.logger.info "User #{user.email} unsubscribed from RoomChannel"
-    else
-      Rails.logger.error 'Unsubscription error: Unauthorized user'
-    end
+    Rails.logger.info "User #{current_user.email} unsubscribed from RoomChannel"
   end
 
   def receive(data)
     Rails.logger.info "Received data: #{data.inspect}"
-    user = find_verified_user
 
-    if user
-      process_received_data(data, user)
+    if data['message'].present?
+      create_and_broadcast_message(data, current_user)
     else
-      Rails.logger.error 'Receive error: Unauthorized user'
+      Rails.logger.error "Received empty message from user: #{current_user.email}"
     end
   end
 
   private
-
-  def find_verified_user
-    if (verified_user = User.find_by(id: current_user&.id))
-      verified_user
-    else
-      Rails.logger.error 'User not found or unauthorized'
-      nil
-    end
-  end
-
-  def process_received_data(data, user)
-    if data['message'].present?
-      create_and_broadcast_message(data, user)
-    else
-      Rails.logger.error "Received empty message from user: #{user.email}"
-    end
-  end
 
   def create_and_broadcast_message(data, user)
     message = Message.create(content: data['message'], user_id: user.id)
