@@ -21,10 +21,10 @@ RSpec.describe RoomChannel, type: :channel do
     expect do
       perform :receive, { message: 'こんにちは', email: user.email }
     end.to have_broadcasted_to("room_channel_#{user.id}").with(hash_including(
-      message: 'こんにちは',
-      name: user.name,
-      created_at: be_present
-    ))
+                                                                 message: 'こんにちは',
+                                                                 name: user.name,
+                                                                 created_at: be_present
+                                                               ))
   end
 
   it 'サブスクリプションを解除するとストリームが解除される' do

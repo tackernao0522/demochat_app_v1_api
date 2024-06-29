@@ -1,4 +1,5 @@
-# app/channels/application_cable/connection.rb
+# frozen_string_literal: true
+
 module ApplicationCable
   class Connection < ActionCable::Connection::Base
     identified_by :current_user
@@ -8,11 +9,11 @@ module ApplicationCable
       logger.add_tags 'ActionCable', current_user.email
     end
 
-    protected
+    private
 
     def find_verified_user
-      if (current_user = User.find_by(id: request.params[:user_id]))
-        current_user
+      if (verified_user = User.find_by(id: cookies.signed[:user_id]))
+        verified_user
       else
         reject_unauthorized_connection
       end
