@@ -1,3 +1,4 @@
+# config/initializers/cors.rb
 # frozen_string_literal: true
 
 # Be sure to restart your server when you modify this file.
@@ -9,7 +10,11 @@
 
 Rails.application.config.middleware.insert_before 0, Rack::Cors do
   allow do
-    origins ENV['API_DOMAIN'] || ''
+    if Rails.env.production?
+      origins ENV['VERCEL_URL'] || ''
+    else
+      origins '*'
+    end
 
     resource '*',
              headers: :any,
