@@ -17,7 +17,8 @@ class RoomChannel < ApplicationCable::Channel
     ActionCable.server.broadcast 'room_channel', {
       message: data['message'],
       name: user.name,
-      created_at: message.created_at
+      created_at: message.created_at,
+      email: user.email
     }
   end
 end
