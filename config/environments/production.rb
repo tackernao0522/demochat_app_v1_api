@@ -38,8 +38,8 @@ Rails.application.configure do
   # Mount Action Cable outside main process or domain.
   # config.action_cable.mount_path = nil
   ActionCable.server.config.disable_request_forgery_protection = true
-  config.action_cable.url = "wss://https://demochat-api.fly.dev/cable"
-  config.action_cable.allowed_request_origins = ['https://https://demochat-api.fly.dev', 'http://https://demochat-api.fly.dev']
+  config.action_cable.url = 'wss://demochat-api.fly.dev/cable'
+  config.action_cable.allowed_request_origins = ['https://front-sigma-three.vercel.app']
 
   # Force all access to the app over SSL, use Strict-Transport-Security, and use secure cookies.
   # config.force_ssl = true
@@ -52,7 +52,7 @@ Rails.application.configure do
   config.log_tags = [:request_id]
 
   # Use a different cache store in production.
-  # config.cache_store = :mem_cache_store
+  config.cache_store = :file_store, Rails.root.join('tmp/cache/').to_s
 
   # Use a real queuing backend for Active Job (and separate queues per environment).
   # config.active_job.queue_adapter     = :resque
