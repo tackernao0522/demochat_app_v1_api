@@ -10,13 +10,13 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2024_06_18_050900) do
+ActiveRecord::Schema[7.0].define(version: 2024_06_30_131603) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
   create_table "likes", force: :cascade do |t|
-    t.bigint "user_id"
-    t.bigint "message_id"
+    t.bigint "user_id", null: false
+    t.bigint "message_id", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["message_id"], name: "index_likes_on_message_id"
@@ -25,8 +25,8 @@ ActiveRecord::Schema[7.0].define(version: 2024_06_18_050900) do
   end
 
   create_table "messages", force: :cascade do |t|
-    t.bigint "user_id"
-    t.string "content"
+    t.bigint "user_id", null: false
+    t.string "content", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["user_id"], name: "index_messages_on_user_id"
@@ -42,7 +42,11 @@ ActiveRecord::Schema[7.0].define(version: 2024_06_18_050900) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["email"], name: "index_users_on_email", unique: true
+    t.index ["name"], name: "index_users_on_name", unique: true
     t.index ["uid", "provider"], name: "index_users_on_uid_and_provider", unique: true
   end
 
+  add_foreign_key "likes", "messages"
+  add_foreign_key "likes", "users"
+  add_foreign_key "messages", "users"
 end

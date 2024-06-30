@@ -8,5 +8,13 @@ class User < ApplicationRecord
   has_many :messages, dependent: :destroy
   has_many :likes, dependent: :destroy
 
-  validates :name, presence: true, length: { maximum: 30 }
+  validates :name, presence: true, length: { maximum: 30 }, uniqueness: true
+
+  before_save :trim_name
+
+  private
+
+  def trim_name
+    self.name = name.strip
+  end
 end
