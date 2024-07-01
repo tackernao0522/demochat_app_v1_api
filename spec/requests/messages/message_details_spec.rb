@@ -5,10 +5,13 @@ require 'rails_helper'
 RSpec.describe 'GET /messages メッセージの詳細属性が正しいこと', type: :request do
   let!(:user) { create(:user) }
   let!(:messages) { create_list(:message, 5, user:) }
-  let(:headers) { user.create_new_auth_token }
-  let(:json) { response.parsed_body }
+  let(:auth_headers) { user.create_new_auth_token }
+  let(:json) { response.parsed_body['data'] }
 
-  before { get '/messages', headers: }
+  before do
+    sign_in user
+    get '/messages', headers: auth_headers
+  end
 
   it '各メッセージの属性が正しいこと' do
     json.each_with_index do |message, index|

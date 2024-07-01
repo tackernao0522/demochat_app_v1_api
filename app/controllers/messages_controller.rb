@@ -1,30 +1,29 @@
 # frozen_string_literal: true
 
-# app/controllers/messages_controller.rb
-class MessagesController < ApplicationController
+class MessagesController < BaseApiController
   before_action :authenticate_user!, only: %i[index create update destroy]
   before_action :set_message, only: %i[update destroy]
 
   def index
     messages = Message.all
-    render json: format_messages(messages), status: :ok
+    render_success(format_messages(messages))
   end
 
   def create
     message = current_user.messages.build(message_params)
     if message.save
       ActionCable.server.broadcast 'room_channel', format_message(message)
-      render json: format_message(message), status: :created
+      render_success(format_message(message), 'メッセージが作成されました', :created)
     else
-      render json: message.errors, status: :unprocessable_entity
+      render_error('メッセージの作成に失敗しました', message.errors, :unprocessable_entity)
     end
   end
 
   def update
     if @message.update(message_params)
-      render json: format_message(@message)
+      render_success(format_message(@message), 'メッセージが更新されました')
     else
-      render json: @message.errors, status: :unprocessable_entity
+      render_error('メッセージの更新に失敗しました', @message.errors, :unprocessable_entity)
     end
   end
 
