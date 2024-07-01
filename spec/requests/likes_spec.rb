@@ -27,7 +27,7 @@ RSpec.describe 'Likes API - POST /messages/:id/likes', type: :request do
       expect do
         post "/messages/#{message.id}/likes", headers:
       end.to_not change(Like, :count)
-      expect(response).to have_http_status(:bad_request)
+      expect(response).to have_http_status(:unprocessable_entity)
     end
   end
 end
