@@ -10,45 +10,15 @@ class RoomChannel < ApplicationCable::Channel
   end
 
   def receive(data)
-    user = find_user(data['email'])
-    return unless user
+    user = User.find_by(email: data['email'])
 
-    message = create_message(data['message'], user)
-    return unless message
+    return unless (message = Message.create(content: data['message'], user_id: user.id))
 
-    broadcast_message(message)
-  end
-
-  private
-
-  def find_user(email)
-    user = User.find_by(email:)
-    ActionCable.server.broadcast 'room_channel', { error: 'User not found' } unless user
-    user
-  end
-
-  def create_message(content, user)
-    message = Message.new(content:, user:)
-    unless message.save
-      ActionCable.server.broadcast 'room_channel', { error: message.errors.full_messages.join(', ') }
-      return nil
-    end
-    message
-  end
-
-  def broadcast_message(message)
-    ActionCable.server.broadcast 'room_channel', format_message(message)
-  end
-
-  def format_message(message)
-    {
-      id: message.id,
-      user_id: message.user.id,
-      name: message.user.name,
-      content: message.content,
-      email: message.user.email,
+    ActionCable.server.broadcast 'room_channel', {
+      message: data['message'],
+      name: user.name,
       created_at: message.created_at,
-      likes: message.likes.map { |like| { id: like.id, email: like.user.email } }
+      email: user.email
     }
   end
 end

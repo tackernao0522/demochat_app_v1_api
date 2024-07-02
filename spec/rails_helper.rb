@@ -14,10 +14,7 @@ require 'action_cable/testing/rspec'
 # Uncomment the following line if you have any files in spec/support:
 # Rails.root.glob('spec/support/**/*.rb').sort.each { |f| require f }
 
-# Include Devise test helpers
 RSpec.configure do |config|
-  config.include Devise::Test::IntegrationHelpers, type: :request
-
   # FactoryBotの設定
   config.include FactoryBot::Syntax::Methods
 

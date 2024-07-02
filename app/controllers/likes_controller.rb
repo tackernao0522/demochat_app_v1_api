@@ -6,20 +6,14 @@ class LikesController < ApplicationController
 
   def create
     like = Like.new(message_id: params[:id], user_id: current_user.id)
-    if like.save
-      render_success({ id: like.id, email: current_user.email }, 'いいねが成功しました')
-    else
-      render_error('いいねの保存が出来ませんでした', like.errors, :unprocessable_entity)
-    end
+    render_response(like.save, like, 'いいねが成功しました', 'いいねの保存が出来ませんでした')
   end
 
   def destroy
     if @like.nil?
-      render_error('いいねが見つかりませんでした', {}, :not_found)
-    elsif @like.destroy
-      render_success({}, 'いいねの削除に成功しました')
+      render json: { message: 'いいねが見つかりませんでした' }, status: :not_found
     else
-      render_error('いいねの削除が出来ませんでした', @like.errors, :unprocessable_entity)
+      render_response(@like.destroy, @like, 'いいねの削除に成功しました', 'いいねの削除が出来ませんでした')
     end
   end
 
@@ -27,5 +21,13 @@ class LikesController < ApplicationController
 
   def set_like
     @like = Like.find_by(id: params[:id], user_id: current_user.id)
+  end
+
+  def render_response(success, like, success_message, failure_message)
+    if success
+      render json: { id: like.id, email: current_user.email, message: success_message }, status: :ok
+    else
+      render json: { message: failure_message, errors: like.errors.messages }, status: :bad_request
+    end
   end
 end
