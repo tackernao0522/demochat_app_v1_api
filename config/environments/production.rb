@@ -42,7 +42,7 @@ Rails.application.configure do
   config.action_cable.allowed_request_origins = ['https://front-sigma-three.vercel.app']
 
   # Force all access to the app over SSL, use Strict-Transport-Security, and use secure cookies.
-  # config.force_ssl = true
+  config.force_ssl = true
 
   # Include generic and useful information about system operation, but avoid logging too much
   # information to avoid inadvertent exposure of personally identifiable information (PII).
@@ -86,4 +86,8 @@ Rails.application.configure do
 
   # Do not dump schema after migrations.
   config.active_record.dump_schema_after_migration = false
+
+  # クッキーを使用するためのミドルウェアを追加
+  config.middleware.use ActionDispatch::Cookies
+  config.middleware.use config.session_store, config.session_options
 end

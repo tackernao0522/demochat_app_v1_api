@@ -1,11 +1,11 @@
 # frozen_string_literal: true
 
 Rails.application.routes.draw do
-  # ルート`/`をウェルカムページに設定
   root 'welcome#index'
 
   mount_devise_token_auth_for 'User', at: 'auth', controllers: {
-    registrations: 'auth/registrations'
+    registrations: 'auth/registrations',
+    sessions: 'auth/sessions'
   }
 
   resources :messages, only: ['index'] do
@@ -16,6 +16,5 @@ Rails.application.routes.draw do
 
   resources :likes, only: ['destroy']
 
-  # 他のAPIエンドポイントのルート設定
   get '/your_api_endpoint', to: 'api#your_action'
 end

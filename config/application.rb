@@ -4,21 +4,32 @@ require_relative 'boot'
 
 require 'rails/all'
 
+require 'devise'
+
+# Require the gems listed in Gemfile, including any gems
+# you've limited to :test, :development, or :production.
 Bundler.require(*Rails.groups)
 
 module App
   class Application < Rails::Application
     config.load_defaults 7.0
 
-    # セッションミドルウェアを追加
+    # Middleware
     config.middleware.use ActionDispatch::Cookies
     config.middleware.use ActionDispatch::Session::CookieStore
 
-    # CSRFトークンの設定
-    config.middleware.use ActionDispatch::Flash
-    config.api_only = false
+    # Uncomment the line below if you need to use Flash middleware
+    # config.middleware.use ActionDispatch::Flash
 
-    # デフォルトのロケールを日本語に設定
-    config.i18n.default_locale = :ja
+    # Ensure all autoload paths are correct
+    config.eager_load_paths += %W[#{config.root}/lib]
+
+    config.api_only = true
+
+    # Add middleware for handling sessions
+    config.middleware.use Rack::MethodOverride
+    config.middleware.use ActionDispatch::Flash
+    config.middleware.use ActionDispatch::Cookies
+    config.middleware.use ActionDispatch::Session::CookieStore, key: '_namespace_key'
   end
 end

@@ -28,7 +28,6 @@ Rails.application.configure do
     }
   else
     config.action_controller.perform_caching = false
-
     config.cache_store = :null_store
   end
 
@@ -37,7 +36,6 @@ Rails.application.configure do
 
   # Don't care if the mailer can't send.
   config.action_mailer.raise_delivery_errors = false
-
   config.action_mailer.perform_caching = false
 
   # Print deprecation notices to the Rails logger.
@@ -54,6 +52,9 @@ Rails.application.configure do
 
   # Highlight code that triggered database queries in logs.
   config.active_record.verbose_query_logs = true
+
+  config.hosts << 'my_rails_api-api-1'
+  config.web_console.whitelisted_ips = '192.168.65.1'
 
   # Raises error for missing translations.
   # config.i18n.raise_on_missing_translations = true

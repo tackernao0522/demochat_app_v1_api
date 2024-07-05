@@ -99,6 +99,7 @@ GEM
       devise (> 3.5.2, < 5)
       rails (>= 4.2.0, < 7.2)
     diff-lcs (1.5.1)
+    drb (2.2.1)
     e2mmap (0.1.0)
     erubi (1.12.0)
     factory_bot (6.4.6)
@@ -296,12 +297,14 @@ PLATFORMS
 DEPENDENCIES
   action-cable-testing (~> 0.6.1)
   base64
+  bcrypt (~> 3.1.7)
   bigdecimal
   bootsnap
   database_cleaner-active_record
   debug
   devise (~> 4.9, >= 4.9.4)
-  devise_token_auth (~> 1.2, >= 1.2.3)
+  devise_token_auth (~> 1.2.3)
+  drb
   factory_bot_rails
   faker
   irb (= 1.10.0)
