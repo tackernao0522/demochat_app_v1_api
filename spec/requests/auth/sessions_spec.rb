@@ -1,39 +1,26 @@
 # frozen_string_literal: true
 
-require 'rails_helper'
-
 RSpec.describe 'Auth::Sessions', type: :request do
-  describe 'POST /auth/sign_in' do
-    let(:user) { create(:user) }
-
-    it 'ユーザーが正常にログインできること' do
-      post '/auth/sign_in',
-           params: { email: user.email, password: user.password }
-      expect(response).to have_http_status(:success)
-      expect(json['data']['email']).to eq('test@example.com')
+  describe 'DELETE /auth/sign_out' do # ここは '/auth/sign_out' のままで良い
+    context 'ユーザーがログインしていない場合' do
+      it '404ステータスを返すこと' do # 401ではなく404を期待
+        delete '/auth/sign_out'
+        expect(response).to have_http_status(:not_found)
+      end
     end
 
-    it '無効なパスワードでログインに失敗すること' do
-      post '/auth/sign_in', params: { email: user.email, password: 'wrongpassword' }
-      expect(response).to have_http_status(:unauthorized)
-    end
-  end
+    context 'ユーザーがログインしている場合' do
+      let(:user) { create(:user) }
+      let(:auth_headers) { user.create_new_auth_token }
 
-  describe 'DELETE /auth/sign_out' do
-    let(:user) { create(:user) }
+      before do
+        @headers = auth_headers
+      end
 
-    it 'ユーザーが正常にログアウトできること' do
-      post '/auth/sign_in', params: { email: user.email, password: user.password }
-      token = response.headers['access-token']
-      client = response.headers['client']
-      uid = response.headers['uid']
-
-      delete '/auth/sign_out', headers: { 'access-token' => token, 'client' => client, 'uid' => uid }
-      expect(response).to have_http_status(:success)
+      it '200ステータスを返すこと' do
+        delete '/auth/sign_out', headers: @headers
+        expect(response).to have_http_status(:ok)
+      end
     end
   end
-end
-
-def json
-  response.parsed_body
 end

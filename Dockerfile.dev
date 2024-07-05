@@ -2,8 +2,8 @@ FROM ruby:3.3.2-alpine
 
 ARG WORKDIR=/app  # デフォルト値を/appに設定
 
-ARG RUNTIME_PACKAGES="nodejs tzdata postgresql-dev postgresql git libxml2-dev libxslt-dev libc6-compat"
-ARG DEV_PACKAGES="build-base curl-dev"
+ARG RUNTIME_PACKAGES="nodejs tzdata postgresql-dev postgresql git libxml2-dev libxslt-dev libc6-compat vim"  # vimを追加
+ARG DEV_PACKAGES="build-base curl-dev g++ make"
 
 ENV HOME=${WORKDIR} \
     LANG=C.UTF-8 \
