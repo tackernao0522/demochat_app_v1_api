@@ -170,3 +170,5 @@ docker compose -f docker-compose.dev.yml --env-file .env.development run --rm ap
 docker compose -f docker-compose.dev.yml --env-file .env.development run --rm api rails db:migrate:status RAILS_ENV=test
 
 docker compose -f docker-compose.dev.yml --env-file .env.development run --rm api bundle exec rspec --format documentation
+
+docker compose -f docker-compose.dev.yml --env-file .env.development run --rm api tail -f log/development.log
