@@ -2,7 +2,10 @@
 
 Rails.application.config.middleware.insert_before 0, Rack::Cors do
   allow do
-    origins ENV['API_DOMAIN'], 'https://front-sigma-three.vercel.app'
+    origins = ['https://front-sigma-three.vercel.app']
+    origins << ENV['API_DOMAIN'] if ENV['API_DOMAIN'].present?
+
+    origins origins.compact.uniq
 
     resource '*',
              headers: :any,
