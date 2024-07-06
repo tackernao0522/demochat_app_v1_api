@@ -30,9 +30,11 @@ module App
     config.middleware.use Rack::MethodOverride
 
     # ミドルウェアスタックのデバッグログ
-    Rails.logger.info "Configured Middleware Stack:"
-    config.middleware.send(:instance_variable_get, :@middlewares).each do |middleware|
-      Rails.logger.info middleware
+    config.after_initialize do
+      Rails.logger.info "Configured Middleware Stack:"
+      config.middleware.send(:instance_variable_get, :@middlewares).each do |middleware|
+        Rails.logger.info middleware
+      end
     end
   end
 end
