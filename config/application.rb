@@ -31,7 +31,7 @@ module App
 
     # ミドルウェアスタックのデバッグログ
     config.after_initialize do
-      Rails.logger.info "Configured Middleware Stack:"
+      Rails.logger.info 'Configured Middleware Stack:'
       config.middleware.send(:instance_variable_get, :@middlewares).each do |middleware|
         Rails.logger.info middleware
       end

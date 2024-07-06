@@ -1,8 +1,17 @@
 # frozen_string_literal: true
 
-# app/controllers/auth/registrations_controller.rb
 module Auth
   class RegistrationsController < DeviseTokenAuth::RegistrationsController
+    def create
+      super do |resource|
+        if resource.persisted?
+          Rails.logger.info("User #{resource.email} was successfully registered.")
+        else
+          Rails.logger.error("User registration failed: #{resource.errors.full_messages}")
+        end
+      end
+    end
+
     private
 
     def sign_up_params

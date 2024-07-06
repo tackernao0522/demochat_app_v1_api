@@ -14,7 +14,7 @@ Rails.application.configure do
   config.action_cable.allowed_request_origins = ['https://front-sigma-three.vercel.app']
 
   config.force_ssl = true
-  config.log_level = :info
+  config.log_level = :debug
   config.log_tags = [:request_id]
   config.cache_store = :file_store, Rails.root.join('tmp/cache/').to_s
   config.action_mailer.perform_caching = false
@@ -44,4 +44,8 @@ Rails.application.configure do
                credentials: true
     end
   end
+
+  # ログの詳細設定
+  config.logger = Logger.new($stdout)
+  config.logger.level = Logger::DEBUG
 end

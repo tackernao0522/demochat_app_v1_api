@@ -1,12 +1,25 @@
 # frozen_string_literal: true
 
-class User < ApplicationRecord
-  devise :database_authenticatable, :registerable,
-         :recoverable, :rememberable, :validatable
-  include DeviseTokenAuth::Concerns::User
+module Auth
+  class RegistrationsController < DeviseTokenAuth::RegistrationsController
+    def create
+      super do |resource|
+        if resource.persisted?
+          Rails.logger.info("User #{resource.email} was successfully registered.")
+        else
+          Rails.logger.error("User registration failed: #{resource.errors.full_messages}")
+        end
+      end
+    end
 
-  has_many :messages, dependent: :destroy
-  has_many :likes, dependent: :destroy
+    private
 
-  validates :name, presence: true, length: { maximum: 30 }
+    def sign_up_params
+      params.permit(:name, :email, :password, :password_confirmation)
+    end
+
+    def account_update_params
+      params.permit(:name, :email, :password, :password_confirmation, :current_password)
+    end
+  end
 end
