@@ -33,3 +33,4 @@
 .irb_history
 .psql_history
 .viminfo
+.local/*
