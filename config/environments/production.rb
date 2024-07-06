@@ -30,9 +30,6 @@ Rails.application.configure do
 
   config.active_record.dump_schema_after_migration = false
 
-  config.middleware.use ActionDispatch::Cookies
-  config.middleware.use config.session_store, config.session_options
-
   # CSRF保護の設定
   config.action_controller.allow_forgery_protection = false
   config.action_controller.forgery_protection_origin_check = false

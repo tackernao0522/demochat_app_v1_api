@@ -28,8 +28,10 @@ module App
 
     # Add middleware for handling sessions
     config.middleware.use Rack::MethodOverride
-    config.middleware.use ActionDispatch::Flash
-    config.middleware.use ActionDispatch::Cookies
-    config.middleware.use ActionDispatch::Session::CookieStore, key: '_namespace_key'
+
+    # ミドルウェアスタックのデバッグログ
+    config.middleware.each do |middleware|
+      Rails.logger.info "Middleware: #{middleware}"
+    end
   end
 end
