@@ -23,29 +23,34 @@ Rails.application.configure do
   config.log_formatter = Logger::Formatter.new
 
   if ENV['RAILS_LOG_TO_STDOUT'].present?
-    logger           = ActiveSupport::Logger.new($stdout)
+    logger = ActiveSupport::Logger.new($stdout)
     logger.formatter = config.log_formatter
-    config.logger    = ActiveSupport::TaggedLogging.new(logger)
+    config.logger = ActiveSupport::TaggedLogging.new(logger)
   end
 
   config.active_record.dump_schema_after_migration = false
 
-  # CSRF保護の設定
-  config.action_controller.allow_forgery_protection = false
-  config.action_controller.forgery_protection_origin_check = false
+  # CSRF 保護の設定
+  config.action_controller.allow_forgery_protection = true
+  config.action_controller.forgery_protection_origin_check = true
 
-  # CORS設定
+  # CORS 設定
   config.middleware.insert_before 0, Rack::Cors do
     allow do
       origins 'https://front-sigma-three.vercel.app'
       resource '*',
                headers: :any,
+               expose: %w[access-token expiry token-type uid client],
                methods: %i[get post put patch delete options head],
                credentials: true
     end
   end
 
+  # Cookie の設定
+  config.action_dispatch.cookies_same_site_protection = :none
+  config.action_dispatch.cookies_serializer = :json
+
   # ログの詳細設定
-  config.logger = Logger.new($stdout)
+  config.logger = ActiveSupport::TaggedLogging.new(Logger.new($stdout))
   config.logger.level = Logger::DEBUG
 end
