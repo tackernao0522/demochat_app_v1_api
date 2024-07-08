@@ -16,7 +16,8 @@ module Auth
       @resource.save
 
       # クッキーを削除
-      cookies.delete(:access_token, domain: :all, same_site: :none, secure: true)
+      cookies.delete(:access_token, domain: 'demochat-api.fly.dev', same_site: :none, secure: true)
+      cookies.delete(:access_token, domain: 'front-sigma-three.vercel.app', same_site: :none, secure: true)
 
       # セッションをクリア
       sign_out(@resource)
