@@ -12,16 +12,20 @@ module Auth
 
     def destroy
       # トークンを無効化
-      @resource.tokens = {}
-      @resource.save
+      if @resource&.valid?
+        @resource.tokens = {}
+        @resource.save
 
-      # クッキーを削除
-      delete_cookies
+        # クッキーを削除
+        delete_cookies
 
-      # セッションをクリア
-      sign_out(@resource)
+        # セッションをクリア
+        sign_out(@resource)
 
-      render json: { success: true }
+        render json: { success: true }
+      else
+        render json: { errors: ['User not found or already logged out'] }, status: :unprocessable_entity
+      end
     rescue StandardError => e
       logger.error "Error in SessionsController#destroy: #{e.message}"
       render json: { errors: [e.message] }, status: :internal_server_error
