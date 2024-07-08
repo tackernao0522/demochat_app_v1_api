@@ -16,7 +16,12 @@ module Auth
       @resource.save
 
       # クッキーを削除
-      cookies.delete(:access_token, domain: :all, same_site: :none, secure: true)
+      if Rails.env.production?
+        cookies.delete(:access_token, domain: '.fly.dev', same_site: :none, secure: true)
+        cookies.delete(:access_token, domain: '.vercel.app', same_site: :none, secure: true)
+      else
+        cookies.delete(:access_token, domain: 'localhost')
+      end
 
       # セッションをクリア
       sign_out(@resource)
