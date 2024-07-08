@@ -11,9 +11,20 @@ module Auth
     end
 
     def destroy
-      super do |_resource|
-        cookies.delete(:access_token)
-      end
+      # トークンを無効化
+      @resource.tokens = {}
+      @resource.save
+
+      # クッキーを削除
+      cookies.delete(:access_token, domain: :all, same_site: :none, secure: true)
+
+      # セッションをクリア
+      sign_out(@resource)
+
+      render json: { success: true }
+    rescue StandardError => e
+      logger.error "Error in SessionsController#destroy: #{e.message}"
+      render json: { errors: [e.message] }, status: :internal_server_error
     end
 
     private
@@ -23,7 +34,7 @@ module Auth
         value: token,
         httponly: true,
         secure: Rails.env.production?,
-        same_site: :strict
+        same_site: Rails.env.production? ? :none : :lax
       }
     end
   end
