@@ -11,26 +11,17 @@ module Auth
     end
 
     def destroy
-      logger.debug "Destroy action called with params: #{params.inspect}"
+      # トークンを無効化
+      @resource.tokens = {}
+      @resource.save
 
-      # ユーザーのロード
-      @resource = resource_class.find_by(uid: params[:uid])
+      # クッキーを削除
+      cookies.delete(:access_token, domain: :all, same_site: :none, secure: true)
 
-      if @resource
-        # トークンを無効化
-        @resource.tokens = {}
-        @resource.save
+      # セッションをクリア
+      sign_out(@resource)
 
-        # クッキーを削除
-        delete_cookies
-
-        # セッションをクリア
-        sign_out(@resource)
-
-        render json: { success: true }
-      else
-        render json: { errors: ['User not found'] }, status: :unprocessable_entity
-      end
+      render json: { success: true }
     rescue StandardError => e
       logger.error "Error in SessionsController#destroy: #{e.message}"
       render json: { errors: [e.message] }, status: :internal_server_error
@@ -45,15 +36,6 @@ module Auth
         secure: Rails.env.production?,
         same_site: Rails.env.production? ? :none : :lax
       }
-    end
-
-    def delete_cookies
-      if Rails.env.production?
-        cookies.delete(:access_token, domain: '.fly.dev', same_site: :none, secure: true)
-        cookies.delete(:access_token, domain: '.vercel.app', same_site: :none, secure: true)
-      else
-        cookies.delete(:access_token, domain: 'localhost')
-      end
     end
   end
 end
