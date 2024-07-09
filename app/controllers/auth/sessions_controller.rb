@@ -11,8 +11,11 @@ module Auth
     end
 
     def destroy
-      # トークンを無効化
-      if @resource&.valid?
+      # ユーザーのロード
+      @resource = resource_class.find_by(uid: sign_out_params[:uid])
+
+      if @resource
+        # トークンを無効化
         @resource.tokens = {}
         @resource.save
 
@@ -24,7 +27,7 @@ module Auth
 
         render json: { success: true }
       else
-        render json: { errors: ['User not found or already logged out'] }, status: :unprocessable_entity
+        render json: { errors: ['User not found'] }, status: :unprocessable_entity
       end
     rescue StandardError => e
       logger.error "Error in SessionsController#destroy: #{e.message}"
@@ -49,6 +52,10 @@ module Auth
       else
         cookies.delete(:access_token, domain: 'localhost')
       end
+    end
+
+    def sign_out_params
+      params.require(:auth).permit(:uid)
     end
   end
 end
