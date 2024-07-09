@@ -11,8 +11,10 @@ module Auth
     end
 
     def destroy
+      logger.debug "Destroy action called with params: #{params.inspect}"
+
       # ユーザーのロード
-      @resource = resource_class.find_by(uid: sign_out_params[:uid])
+      @resource = resource_class.find_by(uid: params[:uid])
 
       if @resource
         # トークンを無効化
@@ -52,10 +54,6 @@ module Auth
       else
         cookies.delete(:access_token, domain: 'localhost')
       end
-    end
-
-    def sign_out_params
-      params.require(:auth).permit(:uid)
     end
   end
 end
