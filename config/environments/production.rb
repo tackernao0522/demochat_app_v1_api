@@ -2,6 +2,7 @@
 
 require 'active_support/core_ext/integer/time'
 
+# rubocop:disable Metrics/BlockLength
 Rails.application.configure do
   config.cache_classes = true
   config.eager_load = true
@@ -54,3 +55,4 @@ Rails.application.configure do
   config.logger = ActiveSupport::TaggedLogging.new(Logger.new($stdout))
   config.logger.level = Logger::DEBUG
 end
+# rubocop:enable Metrics/BlockLength

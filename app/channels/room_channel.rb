@@ -12,13 +12,25 @@ class RoomChannel < ApplicationCable::Channel
   def receive(data)
     user = User.find_by(email: data['email'])
 
-    return unless (message = Message.create(content: data['message'], user_id: user.id))
+    message = Message.new(content: data['content'], user_id: user.id)
+    if message.save
+      ActionCable.server.broadcast 'room_channel', format_message(message)
+    else
+      Rails.logger.error "Failed to create message: #{message.errors.full_messages}"
+    end
+  end
 
-    ActionCable.server.broadcast 'room_channel', {
-      message: data['message'],
-      name: user.name,
+  private
+
+  def format_message(message)
+    {
+      id: message.id,
+      user_id: message.user.id,
+      name: message.user.name,
+      content: message.content,
+      email: message.user.email,
       created_at: message.created_at,
-      email: user.email
+      likes: message.likes.map { |like| { id: like.id, email: like.user.email } }
     }
   end
 end

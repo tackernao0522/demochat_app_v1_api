@@ -2,6 +2,7 @@
 
 module LikesHelper
   def like_count_message(likes)
-    "#{likes.count} likes"
+    count = likes.count
+    "#{count} #{count == 1 ? 'like' : 'likes'}"
   end
 end

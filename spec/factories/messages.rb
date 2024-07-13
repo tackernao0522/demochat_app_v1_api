@@ -2,7 +2,7 @@
 
 FactoryBot.define do
   factory :message do
-    content { 'これはテストメッセージです。' }
+    content { 'This is a test message' }
     association :user
   end
 end
