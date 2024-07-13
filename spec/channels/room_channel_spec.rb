@@ -1,5 +1,6 @@
 # frozen_string_literal: true
 
+# spec/channels/room_channel_spec.rb
 require 'rails_helper'
 
 RSpec.describe RoomChannel, type: :channel do
@@ -19,9 +20,9 @@ RSpec.describe RoomChannel, type: :channel do
   it 'メッセージをストリームにブロードキャストする' do
     subscribe
     expect do
-      perform :receive, { message: 'こんにちは', email: user.email }
+      perform :receive, { content: 'こんにちは', email: user.email }
     end.to have_broadcasted_to('room_channel').with(hash_including(
-                                                      message: 'こんにちは',
+                                                      content: 'こんにちは',
                                                       name: user.name,
                                                       created_at: be_present
                                                     ))

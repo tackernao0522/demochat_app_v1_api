@@ -1,10 +1,11 @@
 # frozen_string_literal: true
 
 RSpec.describe 'Auth::Sessions', type: :request do
-  describe 'DELETE /auth/sign_out' do # ここは '/auth/sign_out' のままで良い
+  describe 'DELETE /auth/sign_out' do
     context 'ユーザーがログインしていない場合' do
-      it '404ステータスを返すこと' do # 401ではなく404を期待
+      it '404ステータスを返すこと' do
         delete '/auth/sign_out'
+        puts response.body if response.status == 500
         expect(response).to have_http_status(:not_found)
       end
     end
