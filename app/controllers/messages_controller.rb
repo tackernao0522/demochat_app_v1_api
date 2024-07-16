@@ -4,7 +4,7 @@ class MessagesController < ApplicationController
   before_action :authenticate_user!, only: ['index']
 
   def index
-    messages = Message.all
+    messages = Message.eager_load(:user, :likes).includes(likes: :user).order(created_at: :asc)
     render json: format_messages(messages), status: :ok
   end
 
