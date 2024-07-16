@@ -29,6 +29,7 @@ class LikesController < ApplicationController
 
   def set_message
     @message = Message.find_by(id: params[:id])
+    render_not_found_message unless @message
   end
 
   def set_like
@@ -67,6 +68,7 @@ class LikesController < ApplicationController
   end
 
   def broadcast_like(message)
+    message = Message.includes(likes: :user).find(message.id)
     ActionCable.server.broadcast 'room_channel', format_message(message)
   end
 
