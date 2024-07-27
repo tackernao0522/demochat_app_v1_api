@@ -14,7 +14,8 @@ class RoomChannel < ApplicationCable::Channel
 
     message = Message.new(content: data['content'], user_id: user.id)
     if message.save
-      ActionCable.server.broadcast 'room_channel', format_message(message)
+      broadcast_message = format_message(message)
+      ActionCable.server.broadcast 'room_channel', broadcast_message.merge(type: 'new_message')
     else
       Rails.logger.error "Failed to create message: #{message.errors.full_messages}"
     end
