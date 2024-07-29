@@ -33,10 +33,32 @@ module Auth
     end
 
     def invalidate_token_and_clear_session
+      invalidate_resource_tokens
+      clear_session_cookies
+      clear_devise_token_auth_headers
+      sign_out(@resource)
+    end
+
+    def invalidate_resource_tokens
       @resource.tokens = {}
       @resource.save
-      cookies.delete(:access_token, domain: :all, same_site: :none, secure: true)
-      sign_out(@resource)
+    end
+
+    def clear_session_cookies
+      cookies_to_delete = [:access_token, :_session_id, 'user.expires_at', 'user.id']
+      cookies_to_delete.each do |cookie_name|
+        delete_cookie(cookie_name)
+      end
+    end
+
+    def delete_cookie(name)
+      cookies.delete(name, domain: :all, same_site: :none, secure: true)
+    end
+
+    def clear_devise_token_auth_headers
+      response.headers['access-token'] = nil
+      response.headers['client'] = nil
+      response.headers['uid'] = nil
     end
 
     def render_not_logged_in
