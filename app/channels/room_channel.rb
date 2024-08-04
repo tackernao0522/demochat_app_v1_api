@@ -21,6 +21,10 @@ class RoomChannel < ApplicationCable::Channel
     end
   end
 
+  def broadcast_deleted_message(message_id)
+    ActionCable.server.broadcast 'room_channel', { id: message_id, type: 'delete_message' }
+  end
+
   private
 
   def format_message(message)

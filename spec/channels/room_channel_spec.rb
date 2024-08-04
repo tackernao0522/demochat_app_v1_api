@@ -3,6 +3,7 @@
 # spec/channels/room_channel_spec.rb
 require 'rails_helper'
 
+# rubocop:disable Metrics/BlockLength
 RSpec.describe RoomChannel, type: :channel do
   let(:user) { create(:user) }
 
@@ -34,4 +35,16 @@ RSpec.describe RoomChannel, type: :channel do
     subscription.unsubscribe_from_channel
     expect(subscription).to_not have_stream_from('room_channel')
   end
+
+  it 'メッセージの削除をブロードキャストする' do
+    subscribe
+
+    message = create(:message, user:)
+    channel = RoomChannel.new(connection, { current_user: user })
+
+    expect do
+      channel.send(:broadcast_deleted_message, message.id)
+    end.to have_broadcasted_to('room_channel').with(id: message.id, type: 'delete_message')
+  end
 end
+# rubocop:enable Metrics/BlockLength

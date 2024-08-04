@@ -8,9 +8,9 @@ Rails.application.routes.draw do
     sessions: 'auth/sessions'
   }
 
-  resources :messages, only: ['index'] do
+  resources :messages, only: %i[index destroy] do
     member do
-      resources :likes, only: ['create']
+      resources :likes, only: %i[create destroy]
     end
   end
 
