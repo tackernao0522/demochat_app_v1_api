@@ -12,6 +12,7 @@ class MessagesController < ApplicationController
 
   def destroy
     if @message.destroy
+      ActionCable.server.broadcast 'room_channel', { id: @message.id, type: 'delete_message' }
       head :no_content
     else
       render json: { error: 'Failed to delete the message' }, status: :internal_server_error
